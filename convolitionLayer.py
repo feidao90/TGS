@@ -3,6 +3,7 @@ import numpy as np
 import os
 import matplotlib.image as img
 import csv
+import  matplotlib.pyplot as plt
 
 # 获取本地input_data
 def input_data():
@@ -59,7 +60,8 @@ sess = tf.Session()
 
 train_targets = get_train_target()
 
-result = segment_data(input_data())
+filepathlist = input_data()
+result = segment_data(filepathlist)
 train_data_list = result['train']
 test_data_list = result['test']
 
@@ -121,24 +123,23 @@ y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
 # 四，定义loss(最小误差概率)，选定优化优化loss，
 cross_entropy = -tf.reduce_sum(ys * tf.log(y_conv))  # 定义交叉熵为loss函数
-train_step = tf.train.DradientDescentOptimizer(0.5).minimize(cross_entropy)  # 调用优化器优化，其实就是通过喂数据争取cross_entropy最小化
+# 调用优化器优化，其实就是通过喂数据争取cross_entropy最小化
+train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 
 # 五，开始数据训练以及评测
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(ys, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-tf.global_variables_initializer().run()
+init = tf.initialize_all_variables()
+sess.run(init)
 
 for i in train_data_list:
-    batch_size = 50
-
-
-# for i in range(20000):
-#     batch = mnist.train.next_batch(50)
-#     if i%100 == 0:
-#         train_accuracy = accuracy.eval(feed_dict={xs:batch[0], ys: batch[1], keep_prob: 1.0})
-#         print("step %d, training accuracy %g"%(i, train_accuracy))
-#     train_step.run(feed_dict={x: batch[0], ys: batch[1], keep_prob: 0.5})
-# print("test accuracy %g"%accuracy.eval(feed_dict={xs: mnist.test.images, ys: mnist.test.labels, keep_prob: 1.0}))
+    batch = filepathlist[i]
+    plt.imshow(batch)
+    plt.plot()
+    plt.show()
+    # train_accuracy = accuracy.eval(feed_dict={xs:batch[0], ys: batch[1], keep_prob: 1.0})
+    # train_step.run(feed_dict={xs: batch[0], ys: batch[1], keep_prob: 0.5})
+# print("test accuracy %g"%accuracy.eval(feed_dict={xs: batch, ys: batch, keep_prob: 1.0}))
 
 
 

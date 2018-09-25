@@ -1,23 +1,12 @@
-import tensorflow as tf
+import matplotlib.pyplot as plt
+import numpy as np
 
-sess = tf.Session()
-
-a = tf.Variable(tf.constant(4.))
-x_val = 5.
-x_data = tf.placeholder(dtype=tf.float32)
-mul = tf.mul(a,x_data)
-loss = tf.square(tf.sub(mul,50))
-init = tf.initialize_all_variables()
-sess.run(init)
-
-my_opt = tf.train.GradientDescentOptimizer(0.01)
-my_opt2 = tf.train.GradientDescentOptimizer(0.1)
-train_step = my_opt.minimize(loss)
-train_step2 = my_opt2.minimize(loss)
-
-for i in range(10):
-    sess.run(train_step,feed_dict={x_data:x_val})
-    sess.run(train_step2,feed_dict={x_data:x_val})
-    a_val = sess.run(a)
-    mul_output = sess.run(mul,feed_dict={x_data:x_val})
-    print(str(a_val)+'*'+str(x_val)+'='+str(mul_output))
+x = np.array([1,2,3,4,5,6,7,8])
+y = np.array([3,5,7,6,2,6,10,15])
+plt.plot(x,y,'r')# 折线 1 x 2 y 3 color
+plt.plot(x,y,'g',lw=10)# 4 line w
+# 折线 饼状 柱状
+x = np.array([1,2,3,4,5,6,7,8])
+y = np.array([13,25,17,36,21,16,10,15])
+plt.bar(x,y,0.2,alpha=1,color='b')# 5 color 4 透明度 3 0.9
+plt.show()
